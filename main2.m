@@ -1,5 +1,7 @@
 clear, clc
 
+% Constrained control signal
+
 h = 0.1;
 A = [1 h;0.5*h 1];
 B = [h^2/2; h];
@@ -65,26 +67,3 @@ plot(t, y3, '-', t, u3, '--');
 grid
 
 
-%%
-
-% 
-% LQ stuff
-% 
-q = 3.8;
-Q = eye(n)*q;
-
-[K, S, e] = lqrd(A, B, Q, r, h)
-
-ssd = ss(A-B*K, zeros(2,1), C, 0);
-
-
-figure(2)
-lsim(ssd, zeros(size(t)), t, x0)
-
-[y4, u4] = simulateLQ(K, x0, M, A, B, C);
-y4(end) = [];
-
-figure(3)
-plot(t, y4', '-', t, u4', '--');
-
-title('LQ controller')

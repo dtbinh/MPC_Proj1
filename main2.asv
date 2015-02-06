@@ -70,10 +70,11 @@ grid
 % 
 % LQ stuff
 % 
+clc
 q = 3.8;
 Q = eye(n)*q;
 
-[K, S, e] = lqrd(A, B, Q, r, h)
+[K, S, e] = lqrd(A, B, Q, r, h);
 
 ssd = ss(A-B*K, zeros(2,1), C, 0);
 

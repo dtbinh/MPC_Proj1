@@ -1,4 +1,4 @@
-function [H, Aeq, AA, f] = matrices(N, n, A, B, C, q, r)
+function [H, Aeq, AA, f, Ain, bin] = matricesCon(N, n, A, B, C, q, r)
 
 
 Cc = C'*C;

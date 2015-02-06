@@ -11,60 +11,80 @@ m = size(B,2);
 %---Parameters
 %
 
-q = 3.8;
-r = 1;
-N = 10;
 x0 = [0.5 1]';
 
-%
-%---Define matrices for the QP
-%
-% For you to do!
 
-
-AA = [kron(ones(N,1), eye(2)); zeros(N, n)];
-
-A11 = zeros(N*n);
-for k = 0:N-1
-    
-   A11(k*n+1:k*n+n, k*n+1:k*n+n) = A^(-(k+1));
-    
-end
-
-A12 = [];
-for k = 0:N-1
-    A12 = [A12, kron([zeros(k, 1); ones(N-k, 1)], -A^(-(k+1))*B)];
-    
-end
-A21 = zeros(N, N*n);
-A22 = zeros(N,N);
-
-Aeq = [A11, A12; A21, A22];
 
 %
 %---For the case with actuator constraints
 %
 Ain = []; % Use empty matrices for the first case without actuator...
 bin = []; % ...constraints and change for the case with constraints!
-%
-%---Cost function
-%
-Cc = C'*C;
-H11 = kron(eye(N), Cc*q);
-H11((end-n+1):end, (end-n+1):end) = q*eye(n);
-H = [H11, zeros(n*N,N); zeros(n*N,N)', eye(N)*r];
 
-f = zeros(N*n+N,1);
+r = 1;
+
+N = 5;
+q = 3.8;
+
+[H1, Aeq1, AA1, f1] = matrices(N, n, A, B, C, q, r);
+
+N = 10;
+q = 3.8;
+
+[H2, Aeq2, AA2, f2] = matrices(N, n, A, B, C, q, r);
+
+N = 10;
+q = 10;
+
+[H3, Aeq3, AA3, f3] = matrices(N, n, A, B, C, q, r);
+
 
 %
 %---MPC algorithm
 %
-M = 100; % simulation time
+M = 300; % simulation time
 
-[y, u] = simulateMPC(H, f, Ain, bin, Aeq, x0, M, AA);
+[y1, u1] = simulateMPC(H1, f1, Ain, bin, Aeq1, x0, M, AA1, A, B, C, 5, n);
+[y2, u2] = simulateMPC(H2, f2, Ain, bin, Aeq2, x0, M, AA2, A, B, C, 10, n);
+[y3, u3] = simulateMPC(H3, f3, Ain, bin, Aeq3, x0, M, AA3, A, B, C, 10, n);
 
-t = h*(1:1:M);
+
+t = h*(0:M-1);
+figure(1)
+clf
 subplot(3,1,1) % For the other two sets of parameters you should change
                % the third index to 2 and 3, respectively.
-plot(t, y, '-', t, u, '--');
+plot(t, y1, '-', t, u1, '--');
 grid
+
+subplot(3,1,2)
+plot(t, y2, '-', t, u2, '--');
+grid
+subplot(3,1,3)
+plot(t, y3, '-', t, u3, '--');
+grid
+
+
+%%
+
+% 
+% LQ stuff
+% 
+q = 3.8;
+Q = eye(n)*q;
+
+[K, S, e] = lqrd(A, B, Q, r, h)
+
+ssd = ss(A-B*K, zeros(2,1), C, 0);
+
+
+figure(2)
+lsim(ssd, zeros(size(t)), t, x0)
+
+[y4, u4] = simulateLQ(K, x0, M, A, B, C);
+y4(end) = [];
+
+figure(3)
+plot(t, y4', '-', t, u4', '--');
+
+title('LQ controller')
