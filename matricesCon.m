@@ -26,3 +26,10 @@ A21 = zeros(N, N*n);
 A22 = zeros(N,N);
 
 Aeq = [A11, A12; A21, A22];
+
+bin = [ones(N,1); zeros(N,1); ones(N,1)];
+
+Ain = [zeros(N, n*N), eye(N);
+       zeros(N, N*n+N);
+       zeros(N, N*n), -1*eye(N)];
+
