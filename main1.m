@@ -58,16 +58,22 @@ set(hFig, 'Position', [9 49 1063 948])
 subplot(3,1,1) % For the other two sets of parameters you should change
                % the third index to 2 and 3, respectively.
 plot(t, y1, '-', t, u1, '--');
+xlabel('Time [s]')
+ylabel('Amplitude')
 title('N = 5, r = 1, q = 3.8');
 grid
 
 subplot(3,1,2)
 plot(t, y2, '-', t, u2, '--');
+xlabel('Time [s]')
+ylabel('Amplitude')
 title('N = 10, r = 1, q = 3.8');
 grid
 
 subplot(3,1,3)
 plot(t, y3, '-', t, u3, '--');
+xlabel('Time [s]')
+ylabel('Amplitude')
 title('N = 10, r = 1, q = 10');
 grid
 
@@ -83,11 +89,18 @@ r = 1;
 q = 3.8;
 Q = eye(n)*q;
 
-[K, S, e] = lqrd(A, B, Q, r, h);
+P = Q;
 
-ssd = ss(A-B*K, zeros(2,1), eye(2), 0, h);
+for i = 1:100
+    
+   P = Q + A'*P*A - A'*P*B*inv(r + B'*P*B)*B'*P*A;
+    
+end
+
+K = inv(r+B'*P*B)*B'*P*A;
 
 
+ssd = ss(A-B*K, zeros(2,1), C, 0, h);
 figure(2)
 lsim(ssd, zeros(size(t)), t, x0)
 
@@ -100,7 +113,7 @@ lsim(ssd, zeros(size(t)), t, x0)
 [y3, u3, te5] = simulateMPC(H3, f3, Ain, bin, Aeq3, x0, M, AA3, A, B, C, 10, n, 'active-set');
 
 
-hFig2 = figure(2);
+hFig2 = figure(3);
 clf
 set(hFig2, 'Position', [9 49 1063 948])
 hold on

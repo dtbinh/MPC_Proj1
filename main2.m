@@ -53,16 +53,25 @@ set(hFig, 'Position', [9 49 1063 948])
 subplot(3,1,1) % For the other two sets of parameters you should change
                % the third index to 2 and 3, respectively.
 plot(t, y1, '-', t, u1, '--');
+xlabel('Time [s]')
+ylabel('Amplitude')
+legend('Output', 'Control signal')
 title('N = 5, r = 1, q = 3.8');
 grid
 
 subplot(3,1,2)
 plot(t, y2, '-', t, u2, '--');
+xlabel('Time [s]')
+ylabel('Amplitude')
+legend('Output', 'Control signal')
 title('N = 10, r = 1, q = 3.8');
 grid
 
 subplot(3,1,3)
 plot(t, y3, '-', t, u3, '--');
+legend('Output', 'Control signal')
+xlabel('Time [s]')
+ylabel('Amplitude')
 title('N = 10, r = 1, q = 10');
 grid
 
@@ -73,7 +82,7 @@ grid
 [y3, u3, te4] = simulateMPC(H3, f3, Ain3, bin3, Aeq3, x0, M, AA3, A, B, C, 10, n, 'interior-point-convex');
 [y3, u3, te5] = simulateMPC(H3, f3, Ain3, bin3, Aeq3, x0, M, AA3, A, B, C, 10, n, 'active-set');
 
-hFig2 = figure(2);
+hFig2 = figure(4);
 clf
 set(hFig2, 'Position', [9 49 1063 948])
 hold on
