@@ -61,6 +61,7 @@ plot(t, y1, '-', t, u1, '--');
 xlabel('Time [s]')
 ylabel('Amplitude')
 title('N = 5, r = 1, q = 3.8');
+legend('Output', 'Control signal')
 grid
 
 subplot(3,1,2)
@@ -68,6 +69,7 @@ plot(t, y2, '-', t, u2, '--');
 xlabel('Time [s]')
 ylabel('Amplitude')
 title('N = 10, r = 1, q = 3.8');
+legend('Output', 'Control signal')
 grid
 
 subplot(3,1,3)
@@ -75,6 +77,7 @@ plot(t, y3, '-', t, u3, '--');
 xlabel('Time [s]')
 ylabel('Amplitude')
 title('N = 10, r = 1, q = 10');
+legend('Output', 'Control signal')
 grid
 
 
@@ -101,8 +104,13 @@ K = inv(r+B'*P*B)*B'*P*A;
 
 
 ssd = ss(A-B*K, zeros(2,1), C, 0, h);
-figure(2)
+hFig = figure(3);
+clf
+set(hFig, 'Position', [9 49 1063 948])
 lsim(ssd, zeros(size(t)), t, x0)
+title('Simulation of LQ controller')
+
+
 
 %%
 
