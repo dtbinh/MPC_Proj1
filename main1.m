@@ -38,7 +38,6 @@ q = 10;
 
 [H3, Aeq3, AA3, f3] = matrices(N, n, A, B, C, q, r);
 
-
 %
 %---MPC algorithm
 %
@@ -94,7 +93,7 @@ Q = eye(n)*q;
 
 P = Q;
 
-for i = 1:100
+for i = 1:10
     
    P = Q + A'*P*A - A'*P*B*inv(r + B'*P*B)*B'*P*A;
     
